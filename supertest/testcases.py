@@ -3,7 +3,7 @@ import six
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from django.test import Client
+from django.test import Client, TestCase
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import Select
@@ -178,6 +178,18 @@ class SeleniumTestCaseMixin(CommonMixin, IntegrationTestCaseMixin):
         cur_path = '/' + '/'.join(url.split('/')[3:])
         if path != cur_path:
             raise AssertionError('Paths do not match.')
+
+
+class UnitTestCase(UnitTestCaseMixin, TestCase):
+    pass
+
+
+class FunctionalTestCase(FunctionalTestCaseMixin, TestCase):
+    pass
+
+
+class IntegrationTestCase(IntegrationTestCaseMixin, TestCase):
+    pass
 
 
 class SeleniumTestCase(SeleniumTestCaseMixin, StaticLiveServerTestCase):
