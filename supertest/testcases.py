@@ -1,3 +1,4 @@
+import time
 import six
 
 from django.conf import settings
@@ -171,13 +172,14 @@ class SeleniumTestCaseMixin(CommonMixin, IntegrationTestCaseMixin):
         try:
             elem = self.find(selector)
         except NoSuchElementException:
-            raise AssertionError('No such element exists.')
+            raise AssertionError('No such element exists: %s'%selector)
 
-    def assertCurrentPath(self, path):
+    def assertCurrentPath(self, path, sleep=None):
+        self.sleep(sleep)
         url = self.wd.current_url
         cur_path = '/' + '/'.join(url.split('/')[3:])
         if path != cur_path:
-            raise AssertionError('Paths do not match.')
+            raise AssertionError('Paths do not match: %s and %s'%(path, cur_path))
 
 
 class UnitTestCase(UnitTestCaseMixin, TestCase):
