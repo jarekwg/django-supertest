@@ -3,6 +3,7 @@ import unittest
 from unittest.mock import patch
 from unittest import TestCase
 
+import django
 from django.test import TransactionTestCase
 
 from .testcases import UnitTestCaseMixin, FunctionalTestCaseMixin, IntegrationTestCaseMixin
@@ -26,7 +27,8 @@ class NoDatabaseMixin(object):
         Check if any of the tests to run subclasses TransactionTestCase.
         """
         suite = super(NoDatabaseMixin, self).build_suite(*args, **kwargs)
-        self._needs_db = any([isinstance(test, TransactionTestCase) for test in suite])
+        self._needs_db = any((isinstance(test, TransactionTestCase) for test in suite)) \
+            or django.VERSION >= (1,9,0) and isinstance(suite, django.test.runner.ParallelTestSuite)
         return suite
 
     def setup_databases(self, *args, **kwargs):
